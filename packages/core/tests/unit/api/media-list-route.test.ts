@@ -33,4 +33,10 @@ describe("handleMediaList multi-MIME", () => {
 			"image/png",
 		]);
 	});
+
+	it("returns total alongside items", async () => {
+		const result = await handleMediaList(ctx.db, {});
+		if (!result.success) throw new Error("expected success");
+		expect(result.data.total).toBe(3);
+	});
 });

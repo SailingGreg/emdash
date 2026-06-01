@@ -117,6 +117,7 @@ export const mediaListResponseSchema = z
 	.object({
 		items: z.array(mediaItemSchema),
 		nextCursor: z.string().optional(),
+		total: z.number().optional(),
 	})
 	.meta({ id: "MediaListResponse" });
 

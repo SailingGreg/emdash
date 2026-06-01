@@ -28,6 +28,8 @@ export interface MediaLibraryProps {
 	hasMore?: boolean;
 	/** Triggered to fetch the next page of local-library items */
 	onLoadMore?: () => void;
+	/** Total number of local-library items (ignoring pagination) */
+	total?: number;
 }
 
 /**
@@ -41,6 +43,7 @@ export function MediaLibrary({
 	onItemUpdated,
 	hasMore,
 	onLoadMore,
+	total,
 }: MediaLibraryProps) {
 	const { t } = useLingui();
 	const [viewMode, setViewMode] = React.useState<"grid" | "list">("grid");
@@ -119,10 +122,10 @@ export function MediaLibrary({
 		const files = e.target.files;
 		if (files && files.length > 0) {
 			const fileArray = [...files];
-			const total = fileArray.length;
+			const fileCount = fileArray.length;
 
 			if (activeProvider === "local") {
-				setUploadState({ status: "uploading", progress: { current: 0, total } });
+				setUploadState({ status: "uploading", progress: { current: 0, total: fileCount } });
 				let uploaded = 0;
 				let failed = 0;
 
@@ -136,19 +139,19 @@ export function MediaLibrary({
 					}
 					setUploadState({
 						status: "uploading",
-						progress: { current: uploaded + failed, total },
+						progress: { current: uploaded + failed, total: fileCount },
 					});
 				}
 
 				if (failed === 0) {
 					setUploadState({
 						status: "success",
-						message: plural(total, { one: "File uploaded", other: "# files uploaded" }),
+						message: plural(fileCount, { one: "File uploaded", other: "# files uploaded" }),
 					});
 				} else if (uploaded === 0) {
 					setUploadState({
 						status: "error",
-						message: plural(total, { one: "Upload failed", other: "All # uploads failed" }),
+						message: plural(fileCount, { one: "Upload failed", other: "All # uploads failed" }),
 					});
 				} else {
 					setUploadState({
@@ -158,7 +161,7 @@ export function MediaLibrary({
 				}
 			} else if (activeProviderInfo?.capabilities.upload) {
 				// Upload to external provider
-				setUploadState({ status: "uploading", progress: { current: 0, total } });
+				setUploadState({ status: "uploading", progress: { current: 0, total: fileCount } });
 				let uploaded = 0;
 				let failed = 0;
 
@@ -172,7 +175,7 @@ export function MediaLibrary({
 					}
 					setUploadState({
 						status: "uploading",
-						progress: { current: uploaded + failed, total },
+						progress: { current: uploaded + failed, total: fileCount },
 					});
 				}
 
@@ -344,6 +347,13 @@ export function MediaLibrary({
 						onChange={(e) => setSearchQuery(e.target.value)}
 						className="ps-9"
 					/>
+				</div>
+			)}
+
+			{/* Item count */}
+			{activeProvider === "local" && typeof total === "number" && currentItems.length > 0 && (
+				<div className="text-sm text-kumo-subtle">
+					{t`Showing ${currentItems.length} of ${total}`}
 				</div>
 			)}
 

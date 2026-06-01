@@ -1033,6 +1033,10 @@ function MediaPage() {
 		return data?.pages.flatMap((page) => page.items) || [];
 	}, [data]);
 
+	const total = data?.pages[0]?.total;
+
+	const onLoadMore = React.useCallback(() => void fetchNextPage(), [fetchNextPage]);
+
 	if (error) {
 		return <ErrorScreen error={error.message} />;
 	}
@@ -1042,7 +1046,8 @@ function MediaPage() {
 			items={items}
 			isLoading={isLoading || isFetchingNextPage}
 			hasMore={!!hasNextPage}
-			onLoadMore={() => void fetchNextPage()}
+			total={total}
+			onLoadMore={onLoadMore}
 			onUpload={(file) => uploadMutation.mutate(file)}
 			onDelete={(id) => deleteMutation.mutate(id)}
 		/>

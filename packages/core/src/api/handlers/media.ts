@@ -12,6 +12,7 @@ import type { ApiResult } from "../types.js";
 export interface MediaListResponse {
 	items: MediaItem[];
 	nextCursor?: string;
+	total?: number;
 }
 
 export interface MediaResponse {
@@ -42,6 +43,7 @@ export async function handleMediaList(
 			data: {
 				items: result.items,
 				nextCursor: result.nextCursor,
+				total: await repo.count(params.mimeType),
 			},
 		};
 	} catch (error) {
