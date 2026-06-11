@@ -1,5 +1,14 @@
 # emdash
 
+## 0.17.3
+
+### Patch Changes
+
+- Updated dependencies [[`d2829e3`](https://github.com/emdash-cms/emdash/commit/d2829e36c0e568db4ec92f500b166e03f0c36973)]:
+  - @emdash-cms/admin@0.17.3
+  - @emdash-cms/auth@0.17.3
+  - @emdash-cms/gutenberg-to-portable-text@0.17.3
+
 ## 0.17.2
 
 ### Patch Changes
